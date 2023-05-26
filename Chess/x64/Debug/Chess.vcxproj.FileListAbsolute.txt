@@ -1,0 +1,2 @@
+C:\Users\Abdullah Laptop\Desktop\Chess\x64\Debug\Chess.exe
+E:\Chess-Project\Chess\x64\Debug\Chess.exe
