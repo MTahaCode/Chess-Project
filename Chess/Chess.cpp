@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../Chess/pieces.h"
 #include "../Chess/Board.h"
+#include "../Chess/PieceTracker.h"
 
 using namespace std;
 
@@ -24,6 +25,23 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         // Draw the board
         Board b(hdc);
         b.Display();
+
+        PieceTracker p(hdc);
+        p.Display();
+
+        Sleep(1000);
+        
+        Position p1;
+        p1.Row = 0;
+        p1.Column = 0;
+
+        Position p2;
+        p2.Row = 2;
+        p2.Column = 7;
+        p.Replace(p1,p2);
+
+        b.Display();
+        p.Display();
 
         EndPaint(hwnd, &ps);
     }

@@ -2,50 +2,92 @@
 
 #include "../Chess/pieces.h"
 #include <windows.h>
+#include <vector>
+
+using namespace std;
+
+struct Square
+{
+    RECT Position;
+    COLORREF color;
+};
 
 class Board
 {
     HDC* hdc;
-    int heightOfSquare = 80;
+    int sizeOfSquare;
+    int Columns;
+    int Rows;
+    COLORREF BlackSquare;
+    COLORREF WhiteSquare;
+    vector<vector<Square>> board;
 public:
-    Board(HDC& h) : hdc(&h) {}
+    Board(HDC& h, int size = 80) : hdc(&h), sizeOfSquare(size) , Columns(8), Rows(8)
+    {
+        BlackSquare = RGB(163, 97, 36);
+        WhiteSquare = RGB(0, 0, 0);
+        CreateBoard();
+    }
 
-	void Display()
-	{
-        for (int i = 0; i < 8; i++)//y axis
+    void CreateBoard()
+    {
+        for (int i = 0; i < Rows; i++)//row
         {
-            for (int j = 0; j < 8; j++)//x axis
+            vector<Square> newRow;
+            board.push_back(newRow);//adding a row
+
+            for (int j = 0; j < Columns; j++)//column
             {
-
-
-                RECT rect = { 0 + (j * heightOfSquare), 0 + (i * heightOfSquare), heightOfSquare + (j * heightOfSquare), heightOfSquare + (i * heightOfSquare) };
-                HBRUSH hBrush;
-                if ((j % 2 == 0 && i % 2 == 0) || (j % 2 == 1 && i % 2 == 1))
+                RECT NewSquare = { 0 + (j * sizeOfSquare), 0 + (i * sizeOfSquare), sizeOfSquare + (j * sizeOfSquare), sizeOfSquare + (i * sizeOfSquare) };
+                if ((i % 2 && j % 2) || (!(i % 2) && !(j % 2)))
                 {
-                    hBrush = CreateSolidBrush(RGB(0, 0, 0));
+                    Square BoardSquare;
+                    BoardSquare.Position = NewSquare;
+                    BoardSquare.color = BlackSquare;
+                    board[i].push_back(BoardSquare);//adding a square
                 }
                 else
                 {
-                    hBrush = CreateSolidBrush(RGB(163, 97, 36));
+                    Square BoardSquare;
+                    BoardSquare.Position = NewSquare;
+                    BoardSquare.color = WhiteSquare;
+                    board[i].push_back(BoardSquare);//adding a square
                 }
-                //HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 0));
-                FillRect(*hdc, &rect, hBrush);
+            }
+        }
+    }
+
+	void Display()
+	{
+        for (int i = 0; i < Rows; i++)//y axis
+        {
+            for (int j = 0; j < Columns; j++)//x axis
+            {
+                HBRUSH hBrush;
+
+                Square currentSq=board[i][j];
+
+                hBrush = CreateSolidBrush(currentSq.color);
+
+                FillRect(*hdc, &currentSq.Position, hBrush);
                 DeleteObject(hBrush);
 
-                //for the pawn
-                if (i == 1 || i == 6)
-                {
-                    //cout << 40 + (j * heightOfSquare) << " " << 30 + (i * heightOfSquare) << endl;
-                    Pawn p(*hdc, 40 + (j * heightOfSquare), 30 + (i * heightOfSquare), 15);
-                    //Pawn p(hdc, 40 + (j * heightOfSquare), 30 + (i * heightOfSquare), 15);
-                    //Pawn p(hdc, 40 , 30 , 15);
-                }
+                /*HBRUSH coordinates;*/
 
-                //for rooks
-                if ((i == 0 || i == 7) && (j == 0 || j == 7))
-                {
-                    Rook r(*hdc, 40 + (j * heightOfSquare), 40 + (i * heightOfSquare));
-                }
+                ////for the pawn
+                //if (i == 1 || i == 6)
+                //{
+                //    //cout << 40 + (j * heightOfSquare) << " " << 30 + (i * heightOfSquare) << endl;
+                //    Pawn p(*hdc, 40 + (j * heightOfSquare), 30 + (i * heightOfSquare), 15);
+                //    //Pawn p(hdc, 40 + (j * heightOfSquare), 30 + (i * heightOfSquare), 15);
+                //    //Pawn p(hdc, 40 , 30 , 15);
+                //}
+
+                ////for rooks
+                //if ((i == 0 || i == 7) && (j == 0 || j == 7))
+                //{
+                //    Rook r(*hdc, 40 + (j * heightOfSquare), 40 + (i * heightOfSquare));
+                //}
             }
         }
 	}

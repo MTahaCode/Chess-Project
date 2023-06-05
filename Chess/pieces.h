@@ -1,6 +1,80 @@
 #pragma once
 
 #include <windows.h>
+#include "../Chess/Board.h"
+
+struct Position
+{
+    int Row;
+    int Column;
+    bool operator==(const int& p)
+    {
+        if (this->Column == p && this->Row == p)
+        {
+            return 1;
+        }
+        return 0;
+    }
+};
+
+class Piece
+{
+protected:
+    Position position;
+    /*COLORREF color;*/
+    HDC* hdc;
+    Square Shape;
+public:
+    Piece(HDC& h, string SquareName) : hdc(&h)
+    {
+        position.Row = SquareName[1] - '1';
+        position.Column = SquareName[0]- 'A';
+        CreatePiece();
+    }
+    virtual void CreatePiece()
+    {
+        //cout <<endl<< position.Column <<" " << position.Row<<endl;
+        int CenterX = 40 + (position.Column * 80);
+        int CenterY = 40 + (position.Row * 80);
+        Shape.Position = { CenterX - 20, CenterY - 20, CenterX + 20, CenterY + 20 };
+        Shape.color = RGB(200, 200, 200);
+    }
+    virtual void Display()
+    {
+        HBRUSH hBrush = CreateSolidBrush(Shape.color);
+
+        FillRect(*hdc, &Shape.Position, hBrush);
+        DeleteObject(hBrush);
+    }
+    Position getPos() const
+    {
+        return this->position;
+    }
+    void setPos(const Position pos)
+    {
+        this->position = pos;
+    }
+};
+
+class EmptyPiece : public Piece
+{
+public:
+    EmptyPiece(HDC& h, string squareName) : Piece(h,squareName)
+    {
+        CreatePiece();
+    }
+    void CreatePiece()
+    {
+        //cout <<endl<< position.Column <<" " << position.Row<<endl;
+        Shape.Position = { 0, 0, 0, 0 };
+        Shape.color = RGB(200, 200, 200);
+    }
+};
+
+class Knight
+{
+    
+};
 
 class Pawn
 {
