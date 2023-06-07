@@ -7,6 +7,7 @@ struct Position
 {
     int Row;
     int Column;
+    Position(int i = 0, int j = 0) : Row(i), Column(j) {}
     bool operator==(const int& p)
     {
         if (this->Column == p && this->Row == p)
@@ -22,15 +23,19 @@ class Piece
 protected:
     Position position;
     /*COLORREF color;*/
-    HDC* hdc;
+    //HWND* hwnd;
     Square Shape;
 public:
-    Piece(HDC& h, string SquareName) : hdc(&h)
+    Piece(/*HWND& h,*/ string SquareName)  //hwnd(&h)
     {
         position.Row = SquareName[1] - '1';
         position.Column = SquareName[0]- 'A';
         CreatePiece();
     }
+    /*void SetHWND(HWND& h)
+    {
+        hwnd = &h;
+    }*/
     virtual void CreatePiece()
     {
         //cout <<endl<< position.Column <<" " << position.Row<<endl;
@@ -39,11 +44,11 @@ public:
         Shape.Position = { CenterX - 20, CenterY - 20, CenterX + 20, CenterY + 20 };
         Shape.color = RGB(200, 200, 200);
     }
-    virtual void Display()
+    virtual void Display(HDC& hdc)
     {
         HBRUSH hBrush = CreateSolidBrush(Shape.color);
 
-        FillRect(*hdc, &Shape.Position, hBrush);
+        FillRect(hdc, &Shape.Position, hBrush);
         DeleteObject(hBrush);
     }
     Position getPos() const
@@ -59,7 +64,7 @@ public:
 class EmptyPiece : public Piece
 {
 public:
-    EmptyPiece(HDC& h, string squareName) : Piece(h,squareName)
+    EmptyPiece(/*HWND& h,*/ string squareName) : Piece(/*h,*/squareName)
     {
         CreatePiece();
     }

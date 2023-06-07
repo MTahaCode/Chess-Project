@@ -14,7 +14,7 @@ struct Square
 
 class Board
 {
-    HDC* hdc;
+    //HWND* hwnd;
     int sizeOfSquare;
     int Columns;
     int Rows;
@@ -22,12 +22,17 @@ class Board
     COLORREF WhiteSquare;
     vector<vector<Square>> board;
 public:
-    Board(HDC& h, int size = 80) : hdc(&h), sizeOfSquare(size) , Columns(8), Rows(8)
+    Board(int size = 80) : sizeOfSquare(size) , Columns(8), Rows(8)
     {
         BlackSquare = RGB(163, 97, 36);
         WhiteSquare = RGB(0, 0, 0);
         CreateBoard();
     }
+
+    /*void SetHWND(HWND& h)
+    {
+        hwnd = &h;
+    }*/
 
     void CreateBoard()
     {
@@ -57,38 +62,41 @@ public:
         }
     }
 
-	void Display()
+	void Display(HDC& hdc)
 	{
+        //HDC hdc = GetDC(*hwnd);
+        HBRUSH hBrush;
+
         for (int i = 0; i < Rows; i++)//y axis
         {
             for (int j = 0; j < Columns; j++)//x axis
             {
-                HBRUSH hBrush;
-
-                Square currentSq=board[i][j];
+                Square& currentSq = board[i][j];
 
                 hBrush = CreateSolidBrush(currentSq.color);
 
-                FillRect(*hdc, &currentSq.Position, hBrush);
+                FillRect(hdc, &currentSq.Position, hBrush);
                 DeleteObject(hBrush);
-
-                /*HBRUSH coordinates;*/
-
-                ////for the pawn
-                //if (i == 1 || i == 6)
-                //{
-                //    //cout << 40 + (j * heightOfSquare) << " " << 30 + (i * heightOfSquare) << endl;
-                //    Pawn p(*hdc, 40 + (j * heightOfSquare), 30 + (i * heightOfSquare), 15);
-                //    //Pawn p(hdc, 40 + (j * heightOfSquare), 30 + (i * heightOfSquare), 15);
-                //    //Pawn p(hdc, 40 , 30 , 15);
-                //}
-
-                ////for rooks
-                //if ((i == 0 || i == 7) && (j == 0 || j == 7))
-                //{
-                //    Rook r(*hdc, 40 + (j * heightOfSquare), 40 + (i * heightOfSquare));
-                //}
             }
         }
-	}
+
+        //ReleaseDC(*hwnd, hdc);
+
+        /*HBRUSH coordinates;*/
+
+        ////for the pawn
+        //if (i == 1 || i == 6)
+        //{
+        //    //cout << 40 + (j * heightOfSquare) << " " << 30 + (i * heightOfSquare) << endl;
+        //    Pawn p(*hdc, 40 + (j * heightOfSquare), 30 + (i * heightOfSquare), 15);
+        //    //Pawn p(hdc, 40 + (j * heightOfSquare), 30 + (i * heightOfSquare), 15);
+        //    //Pawn p(hdc, 40 , 30 , 15);
+        //}
+
+        ////for rooks
+        //if ((i == 0 || i == 7) && (j == 0 || j == 7))
+        //{
+        //    Rook r(*hdc, 40 + (j * heightOfSquare), 40 + (i * heightOfSquare));
+  
+    }
 };
