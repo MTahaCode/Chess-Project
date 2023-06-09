@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <iostream>
-#include "../Chess/pieces.h"
+//#include "../Chess/pieces.h"
+#include "../Chess/Shapes.h"
 #include "../Chess/Board.h"
 #include "../Chess/PieceTracker.h"
 

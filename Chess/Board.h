@@ -1,16 +1,10 @@
 #pragma once
 
-#include "../Chess/pieces.h"
+//#include "../Chess/Shapes.h"
 #include <windows.h>
 #include <vector>
 
 using namespace std;
-
-struct Square
-{
-    RECT Position;
-    COLORREF color;
-};
 
 class Board
 {
@@ -81,9 +75,7 @@ public:
         }
 
         //ReleaseDC(*hwnd, hdc);
-
-        /*HBRUSH coordinates;*/
-
+        //HBRUSH coordinates;
         ////for the pawn
         //if (i == 1 || i == 6)
         //{
@@ -92,7 +84,6 @@ public:
         //    //Pawn p(hdc, 40 + (j * heightOfSquare), 30 + (i * heightOfSquare), 15);
         //    //Pawn p(hdc, 40 , 30 , 15);
         //}
-
         ////for rooks
         //if ((i == 0 || i == 7) && (j == 0 || j == 7))
         //{

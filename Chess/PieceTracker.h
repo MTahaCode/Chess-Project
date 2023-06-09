@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include "../Chess/Shapes.h"
 #include "../Chess/pieces.h"
 #include <windows.h>
 #include <string>
@@ -34,19 +35,29 @@ public:
 				//cout <<endl<< position;
 				if (i == 0 && j == 0)
 				{
-					Piece P(/**hwnd,*/ position);
-					AllPieces[i].push_back(new Piece(P));
+					Pawn P(position);
+					AllPieces[i].push_back(new Pawn(P));
+				}
+				else if (i == 0 && j == 1)
+				{
+					Knight P(position);
+					AllPieces[i].push_back(new Knight(P));
+				}
+				else if (i == 0 && j == 2)
+				{
+					Rook P(position);
+					AllPieces[i].push_back(new Rook(P));
 				}
 				else
 				{
-					EmptyPiece empty(/**hwnd,*/ position);
+					EmptyPiece empty(position);
 					AllPieces[i].push_back(new EmptyPiece(empty));
 				}
 			}
 		}
 	}
 
-	void Replace(const Position p1,const Position p2)
+	void Replace(Position p1, Position p2)
 	{
 		cout << "In the replace Fucntion\n";
 		/*Position temp = AllPieces[0][0].getPos();
@@ -64,7 +75,7 @@ public:
 		AllPieces[p1.Row][p1.Column]->setPos(AllPieces[p2.Row][p2.Column]->getPos());
 		AllPieces[p2.Row][p2.Column]->setPos(temp1);
 
-		AllPieces[p1.Column][p1.Row]->CreatePiece();
+		AllPieces[p1.Row][p1.Column]->CreatePiece();
 		AllPieces[p2.Row][p2.Column]->CreatePiece();
 	}
 	void Display(HDC& hdc)

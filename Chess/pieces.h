@@ -1,41 +1,23 @@
 #pragma once
 
+#include <iostream>
 #include <windows.h>
-#include "../Chess/Board.h"
+#include <string>
+#include "../Chess/Shapes.h"
 
-struct Position
-{
-    int Row;
-    int Column;
-    Position(int i = 0, int j = 0) : Row(i), Column(j) {}
-    bool operator==(const int& p)
-    {
-        if (this->Column == p && this->Row == p)
-        {
-            return 1;
-        }
-        return 0;
-    }
-};
 
 class Piece
 {
 protected:
     Position position;
-    /*COLORREF color;*/
-    //HWND* hwnd;
     Square Shape;
 public:
-    Piece(/*HWND& h,*/ string SquareName)  //hwnd(&h)
+    Piece(string SquareName)
     {
         position.Row = SquareName[1] - '1';
         position.Column = SquareName[0]- 'A';
         CreatePiece();
     }
-    /*void SetHWND(HWND& h)
-    {
-        hwnd = &h;
-    }*/
     virtual void CreatePiece()
     {
         //cout <<endl<< position.Column <<" " << position.Row<<endl;
@@ -61,10 +43,84 @@ public:
     }
 };
 
+class Knight : public Piece
+{
+    RECT Head;
+    RECT Torso;
+    RECT Legs;
+public:
+    Knight(string SquareName) : Piece(SquareName)
+    {
+        CreatePiece();
+    }
+    void CreatePiece()
+    {
+        int center = 40;
+        int CenterX = (position.Column * 80) + center;
+        int CenterY = (position.Row * 80) + center;
+
+        Torso = { CenterX - 10, CenterY - 20, CenterX + 10, CenterY + 20 };
+
+        int HeadCenterX = CenterX + 10;
+        int HeadCenterY = CenterY - 20;
+        Head = { HeadCenterX - 20, HeadCenterY - 5, HeadCenterX + 20, HeadCenterY + 5 };
+
+        int LegsCenterX = CenterX;
+        int LegsCenterY = CenterY + 20;
+        Legs = { LegsCenterX - 25, LegsCenterY - 10, LegsCenterX + 25, LegsCenterY + 5 };
+    }
+    void Display(HDC& hdc)
+    {
+        HBRUSH hBrush;
+        hBrush = CreateSolidBrush(Shape.color);
+        FillRect(hdc, &Torso, hBrush);
+        FillRect(hdc, &Head, hBrush);
+        FillRect(hdc, &Legs, hBrush);
+        DeleteObject(hBrush);
+    }
+};
+
+class Rook : public Piece
+{
+    RECT Head;
+    RECT Torso;
+    RECT Legs;
+public:
+    Rook(string SquareName) : Piece(SquareName)
+    {
+        CreatePiece();
+    }
+    void CreatePiece()
+    {
+        int center = 40;
+        int CenterX = (position.Column * 80) + center;
+        int CenterY = (position.Row * 80) + center;
+
+        Torso = { CenterX - 10, CenterY - 20, CenterX + 10, CenterY + 20 };
+
+        int HeadCenterX = CenterX;
+        int HeadCenterY = CenterY - 20;
+        Head = { HeadCenterX - 20, HeadCenterY - 5, HeadCenterX + 20, HeadCenterY + 5 };
+
+        int LegsCenterX = CenterX;
+        int LegsCenterY = CenterY + 20;
+        Legs = { LegsCenterX - 25, LegsCenterY - 10, LegsCenterX + 25, LegsCenterY + 5 };
+    }
+    void Display(HDC& hdc)
+    {
+        HBRUSH hBrush;
+        hBrush = CreateSolidBrush(Shape.color);
+        FillRect(hdc, &Torso, hBrush);
+        FillRect(hdc, &Head, hBrush);
+        FillRect(hdc, &Legs, hBrush);
+        DeleteObject(hBrush);
+    }
+};
+
 class EmptyPiece : public Piece
 {
 public:
-    EmptyPiece(/*HWND& h,*/ string squareName) : Piece(/*h,*/squareName)
+    EmptyPiece(string squareName) : Piece(squareName)
     {
         CreatePiece();
     }
@@ -76,58 +132,27 @@ public:
     }
 };
 
-class Knight
+class Pawn : public Piece
 {
-    
-};
-
-class Pawn
-{
-    int centerX;
-    int centerY;
-    int radius;
-    HDC* hdc;
+    POINT torso[3];
+    Circle Head;
+    Triangle Torso;
 public:
-    Pawn(HDC& h, int CenX = 0, int CenY = 0, int rad = 0) : hdc(&h), centerX(CenX), centerY(CenY), radius(rad)
+    Pawn(string SquareName) : Piece(SquareName)
     {
-        POINT points[3] = { { centerX, centerY }, { centerX - 10, centerY + 30 }, { centerX + 10, centerY + 30 } };
-        HBRUSH hBrush4 = CreateSolidBrush(RGB(255, 255, 255));
-        SelectObject(*hdc, hBrush4);
-        Polygon(*hdc, points, 3);
-        DeleteObject(hBrush4);
-
-        HBRUSH hBrush3 = CreateSolidBrush(RGB(255, 255, 255));
-        Ellipse(*hdc, centerX - radius, centerY - radius, centerX + radius, centerY + radius);
-        DeleteObject(hBrush3);
+        CreatePiece();
     }
-};
-
-class Rook
-{
-    int centerX;
-    int centerY;
-    HDC* hdc;
-public:
-    Rook(HDC& h, int CenX = 0, int CenY = 0) : hdc(&h), centerX(CenX), centerY(CenY)
+    void CreatePiece()
     {
-        RECT torso = { centerX-10, centerY -20, centerX+10, centerY+20 };
-        HBRUSH hBrush;
-        hBrush = CreateSolidBrush(RGB(255, 255, 255));
-        FillRect(*hdc, &torso, hBrush);
-        DeleteObject(hBrush);
-
-        int HeadCenterX = centerX;
-        int HeadCenterY = centerY - 20;
-        RECT head = { HeadCenterX - 20, HeadCenterY - 5, HeadCenterX + 20, HeadCenterY + 5 };
-        hBrush = CreateSolidBrush(RGB(255, 255, 255));
-        FillRect(*hdc, &head, hBrush);
-        DeleteObject(hBrush);
-
-        int FeetCenterX = centerX;
-        int FeetCenterY = centerY + 20;
-        RECT feet = { FeetCenterX - 25, FeetCenterY - 10, FeetCenterX + 25, FeetCenterY + 5 };
-        hBrush = CreateSolidBrush(RGB(255, 255, 255));
-        FillRect(*hdc, &feet, hBrush);
+        Head.CreateCircle(position);
+        Torso.CreateTriangle(position);
+    }
+    void Display(HDC& hdc)
+    {
+        HBRUSH hBrush = CreateSolidBrush(Shape.color);
+        SelectObject(hdc, hBrush);
+        Polygon(hdc, Torso.points, 3);
+        Ellipse(hdc, Head.Left, Head.Top, Head.Right, Head.Down);
         DeleteObject(hBrush);
     }
 };
