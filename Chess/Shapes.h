@@ -17,12 +17,33 @@ struct Position
         }
         return 0;
     }
+    bool operator==(const Position& p)
+    {
+        if (this->Column == p.Column && this->Row == p.Row)
+        {
+            return 1;
+        }
+        return 0;
+    }
+    
 };
 
 struct Square
 {
     RECT Position;
-    COLORREF color;
+    int red;
+    int blue;
+    int green;
+
+    /*bool operator==(const Square& s)
+    {
+        if (this->red == s.red && this->blue == s.blue && this->green == s.green)
+        {
+            return 1;
+        }
+        return 0;
+    }*/
+
 };
 
 struct Circle
@@ -45,6 +66,36 @@ struct Circle
         Right = (pos.Column * 80) + center + Center.Column + Radius;
         Top = (pos.Row * 80) + center  + Center.Row - Radius - height;
         Down = (pos.Row * 80) + center + Center.Row + Radius - height;
+    }
+    void IncreaseHorizontal(int size)
+    {
+        Left -= size;
+        Right += size;
+    }
+    void IncreaseVertical(int size)
+    {
+        Top -= size;
+        Down += size;
+    }
+    void ScootLeft(int length)
+    {
+        Left -= length;
+        Right -= length;
+    }
+    void ScootRight(int length)
+    {
+        Left += length;
+        Right += length;
+    }
+    void ScootUp(int length)
+    {
+        Top -= length;
+        Down -= length;
+    }
+    void ScootDown(int length)
+    {
+        Top += length;
+        Down += length;
     }
 };
 

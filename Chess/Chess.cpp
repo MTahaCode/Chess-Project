@@ -93,7 +93,7 @@ void MappingClick(Position& pos)
         {
             if (pos.Row >= (0 + (i * 80)) && pos.Row < 80 * (i + 1) && pos.Column >= (0 + (j * 80)) && pos.Column < 80 * (j + 1))
             {
-                pos.Row = i;
+                pos.Row = /*7-*/i;
                 pos.Column = j;
             }
         }
@@ -108,6 +108,8 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     static bool FirstClickChecker = 0;
     static bool SecondClickChecker = 0;
     static Position firstClick(-1, -1), secondClick(-1, -1);
+
+    static bool turn = 0;
 
     //b.SetHWND(hwnd);
     //p.SetHWND(hwnd);
@@ -185,7 +187,7 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
         if (FirstClickChecker && SecondClickChecker)
         {
-            p.Replace(firstClick, secondClick);
+            p.Replace(firstClick, secondClick, turn);
             FirstClickChecker = 0;
             SecondClickChecker = 0;
             InvalidateRect(hwnd, NULL, TRUE);

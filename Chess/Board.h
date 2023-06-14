@@ -12,14 +12,19 @@ class Board
     int sizeOfSquare;
     int Columns;
     int Rows;
-    COLORREF BlackSquare;
-    COLORREF WhiteSquare;
+    Square BlackSquare;
+    Square WhiteSquare;
     vector<vector<Square>> board;
 public:
     Board(int size = 80) : sizeOfSquare(size) , Columns(8), Rows(8)
     {
-        BlackSquare = RGB(163, 97, 36);
-        WhiteSquare = RGB(0, 0, 0);
+        BlackSquare.red = 163;
+        BlackSquare.blue = 97;
+        BlackSquare.green = 50;
+
+        WhiteSquare.red = 1;
+        WhiteSquare.blue = 50;
+        WhiteSquare.green = 32;
         CreateBoard();
     }
 
@@ -42,14 +47,18 @@ public:
                 {
                     Square BoardSquare;
                     BoardSquare.Position = NewSquare;
-                    BoardSquare.color = BlackSquare;
+                    BoardSquare.red = BlackSquare.red;
+                    BoardSquare.blue = BlackSquare.blue;
+                    BoardSquare.green = BlackSquare.green;
                     board[i].push_back(BoardSquare);//adding a square
                 }
                 else
                 {
                     Square BoardSquare;
                     BoardSquare.Position = NewSquare;
-                    BoardSquare.color = WhiteSquare;
+                    BoardSquare.red = WhiteSquare.red;
+                    BoardSquare.blue = WhiteSquare.blue;
+                    BoardSquare.green = WhiteSquare.green;
                     board[i].push_back(BoardSquare);//adding a square
                 }
             }
@@ -67,7 +76,7 @@ public:
             {
                 Square& currentSq = board[i][j];
 
-                hBrush = CreateSolidBrush(currentSq.color);
+                hBrush = CreateSolidBrush(RGB(currentSq.red, currentSq.blue, currentSq.green));
 
                 FillRect(hdc, &currentSq.Position, hBrush);
                 DeleteObject(hBrush);
